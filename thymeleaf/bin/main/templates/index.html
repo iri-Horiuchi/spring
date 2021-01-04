@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>フラグメント</title>
+</head>
+<body>
+
+	<h1>fragment（フラグメント）</h1>
+
+	<!-- th:insert="	（テンプレート名）	::	(フラグメント名)	"  -->
+	<div th:insert="fragment::fragment-test1"></div>
+	<!-- index.htmlに作成されている<div>（ここにinsert）</div>で表示される -->
+	
+	<hr>
+	
+	<!-- th:replace="	（テンプレート名）	::	(フラグメント名)	"  -->
+	<div th:replace="fragment::fragment-test1"></div>
+	<!-- index.htmlに作成されていた<div></div>と上記を置換（replace）される -->
+</body>
+</html>

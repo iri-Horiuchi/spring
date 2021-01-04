@@ -1,0 +1,22 @@
+# .propertiesとの違い
+#     「.yml」はタブインデントの利用が可能なので、コードの編集・管理が容易
+
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/myshop?serverTimezone=JST
+    username: root
+    password: ""
+    
+#  DBのカラム名「user_name」　のアンダーバーをキャメルケース「userName」に設定
+#   @Cloumn　アノテーションが不要になる。
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+loggin:
+  level:
+    org:
+      springframework: WARN
+    com.example.practice.model.mapper: DEBUG

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Study Spring boot and MyBatis　【 hori 】</title>
+
+	<style>
+		td{
+			padding:5px 5px 5px 5px;
+		}
+		td:nth-child(3){
+			width:80px;
+			text-align:right;
+		}
+		input[type=number]:{
+			width:50px;
+		}
+		.count{
+			text-align:right;
+		}
+	</style>
+	
+	<script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script>
+		$(() => {
+			$('button.purchase').on('click',buy);
+			$('button#history').on('click',showHistory);
+		});
+		
+		let buy = (event) =>{
+			let targetTr = $(event.target).parent().parent();
+			let tdList = $(targetTr).find('td');
+			
+			let total = Number($(tdList[3]).find('input').val()) * Number($(tdList[2]).text());
+			
+			let data ={
+					"userId":		$('#hiddenUserId').val(),
+					"goodsId":		$(tdList[0]).text(),
+					"itemCount":	$(tdList[3]).find('input').val(),
+					"total":		total,
+			};
+			
+			$.ajax({
+				type:			'POST',
+				url:			'/practice/api/purchase',
+				data:			JSON.stringify(data),
+				contentType:	'application/json',
+				datatype:		'json',
+				scriptCharset:	'utf-8'
+			})
+			
+			.then((result) => {
+				alert('総額：' + total　+ '円 購入しました');
+			},
+			() =>{
+				console.error('Error:ajax connection failed.*-*-*-*-*-*-*-*-*-*-*-* (buy) horiuchi:20/10/03');
+			});
+		};
+	
+		let showHistory = (event) =>{
+			$.ajax({
+				type:			'POST',
+				url:			'/practice/api/history',
+				data:			JSON.stringify(
+									{"userId":$('#hiddenUserId').val(),}
+								),
+				contentType:	'application/json',
+				datatype:		'json',
+				scriptCharset:	'utf-8'
+			})
+			
+			.then((result) => {
+				let purchaseList = JSON.parse(result);
+				
+				purchaseList.map((v) => {
+					console.log("userId: "　+ v.userId);
+					console.log("goodsId: "　+ v.goodsId);
+					console.log("goodsName: "　+ v.goodsName);
+					console.log("createdAt: "　+ v.createdAt);
+				})
+			},
+			() =>{
+				console.error('Error:ajax connection failed.*-*-*-*-*-*-*-*-*-*-*-* (showHistory) horiuchi:20/10/03');
+			});
+		};
+	</script>
+</head>
+<body>
+
+	<h1> MyBatis　【 チーム開発予習 １ 】 </h1>
+	
+	<table id="goodsListTable">
+		<thead>
+			<tr>
+				<th>ID</th> <th>商品名</th> <th>価格</th> <th>注文数</th> <th>カート</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr th:each="item:${goodsList}">
+				<td th:text="${item.id}" />
+				<td th:text="${item.goodsName}" />
+				<td th:text="${item.price}" />
+				<td><input type="number" class="count" value="0" /></td>
+				<td><button class="purchase">購入</button></td>
+			</tr>
+		</tbody>
+	</table>
+	<hr><BR>
+	<div>最終購入履歴を見る　→　<button id="history">購入履歴</button></div> 
+	<input type="hidden" id="hiddenUserId" th:value="${user.id}" />
+	
+</body>
+</html>

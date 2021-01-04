@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Session Sample TEST</title>
+</head>
+<body>
+
+	<p th:text="${loginSession.userName != null ? 'ようこそ' + loginSession.userName + 'さん' : '未ログインです'}" />
+	
+	<p th:if="${loginSession.password != null}">
+		パスワード入力済みです。
+	</p>
+
+</body>
+</html>
